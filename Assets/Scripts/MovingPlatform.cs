@@ -35,6 +35,7 @@ public class MovingPlatform : MonoBehaviour
         pointIndex = 1;
         pointCount = wayPoints.Length;
         targetPos = wayPoints[1].transform.position;
+        transform.position = wayPoints[0].transform.position;
         DirectionCalculate();
     }
 
