@@ -54,12 +54,12 @@ public class MovingPlatform : MonoBehaviour
     }
 
     void NextPoint()
-    { 
+    {
         transform.position = targetPos;
         moveDirection = Vector3.zero;
 
         if (pointIndex == pointCount - 1)
-        { 
+        {
             direction = -1;
         }
 
@@ -74,15 +74,14 @@ public class MovingPlatform : MonoBehaviour
         StartCoroutine(WaitNextPoint());
     }
 
-    IEnumerator WaitNextPoint() 
+    IEnumerator WaitNextPoint()
     {
         yield return new WaitForSeconds(waitDuration);
         DirectionCalculate();
     }
 
     void DirectionCalculate()
-    { 
+    {
         moveDirection = (targetPos - transform.position).normalized;
     }
-
 }

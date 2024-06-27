@@ -1,0 +1,78 @@
+{
+    "name": "AnimChange",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "a46b9b48-ec23-49a3-afa4-a92bb03f1acd",
+            "actions": [
+                {
+                    "name": "AnimationChange",
+                    "type": "Button",
+                    "id": "d645c0fc-4484-4bc1-8d34-b94affc4b6a0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6c9b0e29-3584-4805-9bc7-b7fa9a828637",
+                    "path": "<Keyboard>/#(Q)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnimationChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2c079110-f6dc-4009-8a7e-1ae6aa7f7e28",
+                    "path": "<Keyboard>/#(W)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnimationChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f54893c-83cb-4304-aef4-d6c1a0e0a2b6",
+                    "path": "<Keyboard>/#(E)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnimationChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cdc07c72-df1c-4fd4-a4f0-035b08db5300",
+                    "path": "<Keyboard>/#(R)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnimationChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "50ad421f-46d8-495e-acbe-619cb8730d32",
+                    "path": "<Keyboard>/#(T)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AnimationChange",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

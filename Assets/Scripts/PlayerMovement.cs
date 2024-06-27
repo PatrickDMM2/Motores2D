@@ -6,43 +6,64 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private CustomInput input = null;
-    private Vector2 moveVector = Vector2.zero;
-    private Rigidbody2D rb = null;
-    private float moveSpeed = 10f;
+    private CustomInput _input = null;
+    private Vector2 _moveVector = Vector2.zero;
+    private Rigidbody2D _rb = null;
+    public float _moveSpeed = 4f;
+    private Animator _animator = null;
 
     private void Awake()
     {
-        input = new CustomInput();
-        rb = GetComponent<Rigidbody2D>();
+        _input = new CustomInput();
+        _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
-        input.Enable();
-        input.Player.Movement.performed += OnMovementPerformed;
-        input.Player.Movement.canceled += OnMovementCancelled;
+        _input.Enable();
+        _input.Player.Movement.performed += OnMovementPerformed;
+        _input.Player.Movement.canceled += OnMovementCancelled;
     }
 
     private void OnDisable()
     {
-        input.Disable();
-        input.Player.Movement.performed -= OnMovementPerformed;
-        input.Player.Movement.canceled -= OnMovementCancelled;
+        _input.Disable();
+        _input.Player.Movement.performed -= OnMovementPerformed;
+        _input.Player.Movement.canceled -= OnMovementCancelled;
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = moveVector * moveSpeed;
+        _rb.velocity = _moveVector * _moveSpeed;
     }
 
-    private void OnMovementPerformed(InputAction.CallbackContext value) 
+    private void OnMovementPerformed(InputAction.CallbackContext callbackContext)
     { 
-        moveVector = value.ReadValue<Vector2>();
+        _moveVector = callbackContext.ReadValue<Vector2>();
+
+        if(_moveVector.x > 0)
+        {
+            transform.localScale = new Vector3(3.4311f, 3.4311f, 3.4311f);
+        }
+        else
+        {
+            transform.localScale = new Vector3(-3.4311f, 3.4311f, 3.4311f);
+        }
+
+        if(_moveVector.y > 0)
+        {
+            _animator.SetBool("Jump", true);
+        }
+
+        _animator.SetBool("Jump", true);
+        _animator.SetBool("Idle", true);
     }
 
     private void OnMovementCancelled(InputAction.CallbackContext value)
     {
-        moveVector = Vector2.zero;
+        _moveVector = Vector2.zero;
+        _animator.SetBool("Idle", false);
+        _animator.SetBool("Jump", false);
     }
 }

@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -121,7 +121,175 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Hanging_0
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 192
+        width: 15
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edd0538688db2c240829f71172b35825
+      internalID: 1021196633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_1
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 192
+        width: 16
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 303692aa27cc89f4eaf017a69321dd4e
+      internalID: -1374879926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_2
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 128
+        width: 15
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2b6acb0114d68e48a407f878bd26ef5
+      internalID: 1381547458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_3
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 128
+        width: 16
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79ea9e604369b3847b8f995afb62f471
+      internalID: -2088445205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_4
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 64
+        width: 15
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dde5158544849f49a42c52e488f0fc9
+      internalID: 236169722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_5
+      rect:
+        serializedVersion: 2
+        x: 186
+        y: 64
+        width: 14
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13ef6af15c1e3184eb6ca6bc46adf32d
+      internalID: -1896946614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_6
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 0
+        width: 14
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ac691de44c4b36428778c43e2e04972
+      internalID: -990371058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hanging_7
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 0
+        width: 15
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 715c396788098f549a29b47ee59bf5ff
+      internalID: 201302088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +300,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Hanging_0: 1021196633
+      Hanging_1: -1374879926
+      Hanging_2: 1381547458
+      Hanging_3: -2088445205
+      Hanging_4: 236169722
+      Hanging_5: -1896946614
+      Hanging_6: -990371058
+      Hanging_7: 201302088
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
