@@ -16002,7 +16002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293d7ec5587885d4ea082d65330e362b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sprintSpeed: 15
+  _sprintSpeed: 12
   _animator: {fileID: 886230434}
   rb: {fileID: 886230429}
   groundCheck: {fileID: 242828316}

@@ -69,15 +69,6 @@ public class PlayerMovementFinal : MonoBehaviour
             _animator.SetBool("IsDashing", true);
         }
 
-        //_animator.SetBool("IsSprinting", false);
-
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    _animator.SetBool("IsCrouching", true);
-        //}
-
-        //_animator.SetBool("IsCrouching", false);
-
         Flip();
     }
 
