@@ -14,7 +14,7 @@ public class SecondDisappearPlatform : MonoBehaviour
 
     public float _timeToTogglePlatfform = 5;
     public float _currentTime = 0;
-    public bool enabled = true;
+    public bool _enabled = true;
     void Start()
     {
         Appear = enabled;
@@ -47,7 +47,7 @@ public class SecondDisappearPlatform : MonoBehaviour
         _spriteRenderer.color = _color1;
         TogglePlatform(Appear);
         Appear = !Appear;
-        Debug.Log("Se acabo el tiempo");
+        //Debug.Log("Se acabo el tiempo");
         yield return new WaitForSeconds(_secondstoWait);
         StartCoroutine(WaitTime());
     }
