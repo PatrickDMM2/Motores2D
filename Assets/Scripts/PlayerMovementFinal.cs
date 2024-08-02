@@ -11,6 +11,16 @@ public class PlayerMovementFinal : MonoBehaviour
     private bool _isFacingRight = true;
     private bool _doubleJump;
 
+    private bool _isWallSliding;
+    private float _wallSlidingSpeed = 2f;
+
+    private bool _isWallJumping;
+    private float _wallJumpingDirection;
+    private float _wallJumpingTime = 0.2f;
+    private float _wallJumpingCounter;
+    private float _wallJumpingDuration = 0.4f;
+    private Vector2 _wallJumpingPower = new Vector2(8f, 16f);
+
     private bool _canDash = true;
     private bool _isDashing;
     private float _dashingPower = 6f;
@@ -20,12 +30,16 @@ public class PlayerMovementFinal : MonoBehaviour
     public float _sprintSpeed;
     private bool _isSprinting;
 
+    public CoinManager _coins;
+
     public Animator _animator;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private TrailRenderer tr;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private LayerMask wallLayer;
 
     void Update()
     {
@@ -69,7 +83,13 @@ public class PlayerMovementFinal : MonoBehaviour
             _animator.SetBool("IsDashing", true);
         }
 
-        Flip();
+        WallSlide();
+        WallJump();
+
+        if (!_isWallJumping)
+        {
+            Flip();
+        }
     }
 
     private void FixedUpdate()
@@ -91,12 +111,72 @@ public class PlayerMovementFinal : MonoBehaviour
             _animator.SetBool("IsSprinting", false);
         }
 
-        rb.velocity = new Vector2(_horizontal * speed, rb.velocity.y);
+        if (!_isWallJumping)
+        {
+            rb.velocity = new Vector2(_horizontal * speed, rb.velocity.y);
+        }
     }
 
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    }
+
+    private bool IsWalled()
+    {
+        return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer);
+    }
+
+    private void WallSlide()
+    {
+        if (IsWalled() && !IsGrounded() && _horizontal != 0f)
+        {
+            _isWallSliding = true;
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -_wallSlidingSpeed, float.MaxValue));
+        }
+    }
+
+    private void WallJump()
+    {
+        if (_isWallSliding)
+        {
+            _isWallJumping = false;
+            _wallJumpingDirection = -transform.localScale.x;
+            _wallJumpingCounter = _wallJumpingTime;
+
+            CancelInvoke(nameof(StopWallJumping));
+
+            _animator.SetBool("IsWallSliding", false);
+
+        }
+        else
+        {
+            _wallJumpingCounter -= Time.deltaTime;
+        }
+
+        if (Input.GetButtonDown("Jump") && _wallJumpingCounter > 0f)
+        {
+            _isWallJumping = true;
+            rb.velocity = new Vector2(_wallJumpingDirection * _wallJumpingPower.x, _wallJumpingPower.y);
+            _wallJumpingCounter = 0f;
+
+            if (transform.localScale.x != _wallJumpingDirection)
+            {
+                _isFacingRight = !_isFacingRight;
+                Vector3 localSclae = transform.localScale;
+                localSclae.x *= -1f;
+                transform.localScale = localSclae;
+            }
+
+            Invoke(nameof(StopWallJumping), _wallJumpingDuration);
+
+            _animator.SetBool("IsWallSliding", true);
+        }
+    }
+
+    private void StopWallJumping()
+    {
+        _isWallJumping = false;
     }
 
     private void Flip()
@@ -124,5 +204,14 @@ public class PlayerMovementFinal : MonoBehaviour
         _isDashing = false;
         yield return new WaitForSeconds(_dashingCooldown);
         _canDash = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Coin"))
+        {
+            Destroy(other.gameObject);
+            _coins.coinCount++;
+        }
     }
 }
