@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Coin
+  - Enemy
+  - Audio
+  - Victory
   layers:
   - Default
   - TransparentFX

@@ -1,19 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Tilemaps;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerMovementFinal : MonoBehaviour
 {
+    private CustomInput _input;
     private float _horizontal;
-    private float _speed = 8f;
-    private float _jumpingPower = 16f;
+    public float _speed = 8f;
+    public float _jumpingPower = 16f;
     private bool _isFacingRight = true;
     private bool _doubleJump;
 
     private bool _isWallSliding;
-    private float _wallSlidingSpeed = 2f;
+    public float _wallSlidingSpeed = 2f;
 
+    private InputAction _walljump;
     private bool _isWallJumping;
     private float _wallJumpingDirection;
     private float _wallJumpingTime = 0.2f;
@@ -21,18 +27,28 @@ public class PlayerMovementFinal : MonoBehaviour
     private float _wallJumpingDuration = 0.4f;
     private Vector2 _wallJumpingPower = new Vector2(8f, 16f);
 
+    private InputAction _dash;
     private bool _canDash = true;
     private bool _isDashing;
-    private float _dashingPower = 6f;
-    private float _dashingTime = 0.2f;
-    private float _dashingCooldown = 1f;
+    public float _dashingPower = 6f;
+    public float _dashingTime = 0.2f;
+    public float _dashingCooldown = 1f;
 
+    private InputAction _shoot;
+    public Transform firePoint;
+    public GameObject bulletPrefab;
+
+    private InputAction _sprint;
     public float _sprintSpeed;
     private bool _isSprinting;
+
+    public Text victoryText;
 
     public CoinManager _coins;
 
     public Animator _animator;
+
+    AudioManager audioManager;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -41,55 +57,103 @@ public class PlayerMovementFinal : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
 
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+
+
+        _input = new();
+        _dash = _input.Player.Dash;
+        _dash.performed += OnDashPerformed;
+        _shoot = _input.Player.Shoot;
+        _shoot.performed += OnShootPerformed;
+        //_sprint = _input.Player.Run;
+        //_sprint.started += OnRunStarted;
+        //_sprint.canceled += OnSprintCanceled;
+
+    }
+
+    private void OnEnable()
+    {
+        _input.Enable();
+        //_input.Player.Jump.started += _ => Jump();
+        _input.Player.Dash.started += _ => Dash();
+        _shoot.Enable();
+        //_runAction.Enable();
+
+    }
+
+    private void OnDisable()
+    {
+        _input.Disable();
+        //_input.Player.Jump.started -= _ => Jump();
+        _input.Player.Dash.started -= _ => Dash();
+        _shoot.Disable();
+        //_runAction.Disable();
+    }
+
+
+
     void Update()
     {
-        if (_isDashing)
+        if (!PauseMenu.isPaused)
         {
-            _animator.SetBool("IsDashing", false);
-
-            return;
-        }
-
-        _horizontal = Input.GetAxisRaw("Horizontal");
-
-        _animator.SetFloat("Speed", Mathf.Abs(_horizontal));
-
-        if (IsGrounded() && !Input.GetButton("Jump"))
-        {
-            _doubleJump = false;
-            _animator.SetBool("IsJumping", false);
-        }
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            if (IsGrounded() || _doubleJump)
+            if (_isDashing)
             {
-                rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
+                _animator.SetBool("IsDashing", false);
 
-                _doubleJump = !_doubleJump;
+                return;
+            }
 
-                _animator.SetBool("IsJumping", true);
+            _horizontal = Input.GetAxisRaw("Horizontal");
+
+            _animator.SetFloat("Speed", Mathf.Abs(_horizontal));
+
+            if (IsGrounded() && !Input.GetButton("Jump"))
+            {
+                _doubleJump = false;
+                _animator.SetBool("IsJumping", false);
+            }
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                if (IsGrounded() || _doubleJump)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, _jumpingPower);
+
+                    _doubleJump = !_doubleJump;
+
+                    _animator.SetBool("IsJumping", true);
+                }
+            }
+
+            if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.O) && _canDash)
+            {
+                StartCoroutine(Dash());
+                _animator.SetBool("IsDashing", true);
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                audioManager.PlaySFX(audioManager.fireball);
+                Shoot();
+            }
+
+            WallSlide();
+            WallJump();
+
+            if (!_isWallJumping)
+            {
+                Flip();
             }
         }
-
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.O) && _canDash)
-        {
-            StartCoroutine(Dash());
-            _animator.SetBool("IsDashing", true);
-        }
-
-        WallSlide();
-        WallJump();
-
-        if (!_isWallJumping)
-        {
-            Flip();
-        }
+        
     }
 
     private void FixedUpdate()
@@ -134,7 +198,28 @@ public class PlayerMovementFinal : MonoBehaviour
             _isWallSliding = true;
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -_wallSlidingSpeed, float.MaxValue));
         }
+        else
+        {
+
+            _isWallSliding = false;
+
+            _animator.SetBool("IsWallSliding", _isWallSliding);
+        }
     }
+
+    private void OnShootPerformed(InputAction.CallbackContext context)
+    {
+        Shoot();
+    }
+    private void OnDashPerformed(InputAction.CallbackContext context)
+    {
+        Dash();
+    }
+    private void OnWallJumpPerformed(InputAction.CallbackContext context)
+    {
+        WallJump();
+    }
+
 
     private void WallJump()
     {
@@ -146,7 +231,7 @@ public class PlayerMovementFinal : MonoBehaviour
 
             CancelInvoke(nameof(StopWallJumping));
 
-            _animator.SetBool("IsWallSliding", false);
+            _animator.SetBool("IsWallSliding", true);
 
         }
         else
@@ -163,14 +248,16 @@ public class PlayerMovementFinal : MonoBehaviour
             if (transform.localScale.x != _wallJumpingDirection)
             {
                 _isFacingRight = !_isFacingRight;
-                Vector3 localSclae = transform.localScale;
-                localSclae.x *= -1f;
-                transform.localScale = localSclae;
+
+                transform.Rotate(0f, 180f, 0f);
+                //Vector2 localSclae = transform.localScale;
+                //localSclae.x *= -1f;
+                //transform.localScale = localSclae;
             }
 
             Invoke(nameof(StopWallJumping), _wallJumpingDuration);
 
-            _animator.SetBool("IsWallSliding", true);
+            _animator.SetBool("IsWallSliding", false);
         }
     }
 
@@ -184,10 +271,17 @@ public class PlayerMovementFinal : MonoBehaviour
         if (_isFacingRight && _horizontal < 0f || !_isFacingRight && _horizontal > 0f)
         {
             _isFacingRight = !_isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+
+            transform.Rotate(0f, 180f, 0f);
+            //Vector3 localScale = transform.localScale;
+            //localScale.x *= -1f;
+            //transform.localScale = localScale;
         }
+    }
+
+    void Shoot()
+    {
+        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
     }
 
     private IEnumerator Dash()
@@ -196,7 +290,7 @@ public class PlayerMovementFinal : MonoBehaviour
         _isDashing = true;
         float origalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.velocity = new Vector2(transform.localScale.x * _dashingPower, 0f);
+        rb.velocity = new Vector2(transform.right.x * _dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(_dashingTime);
         tr.emitting = false;
@@ -206,11 +300,24 @@ public class PlayerMovementFinal : MonoBehaviour
         _canDash = true;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.gameObject.CompareTag("Coin"))
+
+        if (collision.tag == "Victory")
+        { 
+            victoryText.gameObject.SetActive(true);
+            Time.timeScale = 0;
+        }
+
+        if (collision.gameObject.CompareTag("Victory"))
         {
-            Destroy(other.gameObject);
+            audioManager.PlaySFX(audioManager.victory);
+        }
+
+        if (collision.gameObject.CompareTag("Coin"))
+        {
+            audioManager.PlaySFX(audioManager.coin);
+            Destroy(collision.gameObject);
             _coins.coinCount++;
         }
     }
